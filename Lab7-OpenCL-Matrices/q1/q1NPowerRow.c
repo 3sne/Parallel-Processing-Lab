@@ -25,12 +25,12 @@ int main(int argc, char const *argv[]) {
   //user input
     int nRow, nCol;
     printf("=====Matrix A (m x n)=====\n");
-    printf("Rows (m)>> ");
+    printf("Rows (m)    >> ");
     scanf("%d", &nRow);
-    printf("Columns (n)>> ");
+    printf("Columns (n) >> ");
     scanf("%d", &nCol);
     int *matA = (int *)malloc(sizeof(int) * nRow * nCol);
-    printf("Entries: \n");
+    printf("Elements    >> \n");
     for ( int i = 0; i < nRow * nCol; i++ ) {
         scanf("%d", &matA[i]);
     }
@@ -99,13 +99,14 @@ int main(int argc, char const *argv[]) {
     eprint("read out", ret);
     
     //display result
-    printf("\n=====New Matrix A=====\n");
+    printf("\n=======New Matrix A=======\n");
     for ( int i = 0; i < nRow * nCol; i++ ) {
         if(i % nCol == 0) {
             printf("\n ");
         }
         printf("%5d ", matA[i]);
     }
+    printf("\n");
  
     //cleanup
     ret = clFlush(cmdq);
