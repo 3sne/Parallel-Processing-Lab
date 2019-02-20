@@ -1,6 +1,6 @@
 #!/bin/bash
 echo; echo; echo
-echo -e ' \t '@Author:   3sne
+echo -e ' \t '@Author:   3sne ( Mukur Panchani )
 echo -e ' \t '@File:     prep-intel-gpu.sh
 echo -e ' \t '@Location: www.github.com/3sne/Parallel-Processing-Lab/setup/prep-intel-gpu.sh
 echo; echo; echo

@@ -27,6 +27,7 @@ __kernel void weirdFlex(__global int *matA) {
     int n = currElement;
     int bin = 0, ones = 0, i = 1, rem;
     if ( id_row != 0 && id_row != row_size - 1 && id_col != 0 && id_col != col_size - 1) {
+        
         //Dec -> Bin
         while(n > 0) {
             rem = n % 2;
