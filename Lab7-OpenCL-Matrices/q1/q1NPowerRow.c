@@ -1,6 +1,6 @@
 /* 
     @Author:    3sne ( Mukur Panchani )
-    @FileName:  q1NPowerRow
+    @FileName:  q1NPowerRow.c
     @Task:      OpenCL program to replace n-th element in row r by pow(n, r) in a matrix.
  */
 

@@ -1,7 +1,7 @@
 /* 
     @Author:    3sne ( Mukur Panchani )
-    @FileName:  q1NPowerRow
-    @Task:      OpenCL program to replace n-th element in row r by pow(n, r) in a matrix.
+    @FileName:  q4SuperSum.c
+    @Task:      OpenCL Program to replace element by sum of row-sum and column-sum of where it belongs in a matrix.
  */
 
 #include <stdio.h>

@@ -1,7 +1,7 @@
 /* 
     @Author:    3sne ( Mukur Panchani )
-    @FileName:  q1NPowerRow
-    @Task:      OpenCL program to replace n-th element in row r by pow(n, r) in a matrix.
+    @FileName:  q2NonBorderOnes.c
+    @Task:      OpenCL program to replace non-border elements of a matrix by their respective 1's complement (binary representation)
  */
 
 #include <stdio.h>

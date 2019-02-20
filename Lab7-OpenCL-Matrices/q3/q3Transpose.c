@@ -1,7 +1,7 @@
 /* 
     @Author:    3sne ( Mukur Panchani )
-    @FileName:  q1NPowerRow
-    @Task:      OpenCL program to replace n-th element in row r by pow(n, r) in a matrix.
+    @FileName:  q3Transpose.c
+    @Task:      OpenCL program to generate transpose of given matrix
  */
 
 #include <stdio.h>
