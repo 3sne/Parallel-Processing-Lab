@@ -17,7 +17,7 @@ So, in order to let OpenCL APIs look at your gpu, you need to have relevant driv
   * Compile:<br/>
     * To compile "oclFile.c":<br/>
        `$gcc -g oclFile.c -lOpenCL` <br/>
-    * You can use -I flag to include "CL" folder containing OpenCL headers while compiling if they aren't already installed natively (Installing above SDKs do this for you).<br/>
+    * You can use `-I` flag to include "CL" folder containing OpenCL headers while compiling if they aren't already installed natively (Installing above SDKs do this for you).<br/>
 
 ### WINDOWS:<br/>
 Since windows doesn't natively run gcc (needs precompiled binaries, like MinGW), compiling and running OpenCL code without an IDE can be a pain.<br/>
