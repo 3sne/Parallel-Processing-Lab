@@ -43,7 +43,7 @@ int main(int argc, char const *argv[]) {
 
   //user input
     int wInd = 0;
-    int ourWordCount = 0;
+    int *ourWordCount = (int*)malloc(sizeof(int));
     int *wordStart = (int*)malloc(sizeof(int) * 256);
     int *wordEnd = (int*)malloc(sizeof(int) * 256);
     char *inStr = (char*)malloc(sizeof(char) * 1024);
@@ -52,11 +52,9 @@ int main(int argc, char const *argv[]) {
     scanf("%[^\n]s",inStr);
     int len = strlen(inStr);
     getWords(inStr, wordStart, wordEnd, &wInd);
-    for (int i = 0; i <= wInd; i++ ) {
-        printf("Hey >> %d: %d  |  %d\n", i, wordStart[i], wordEnd[i]);
-    }
     printf("Enter word to find occurances for >> ");
     scanf("%s", ourWord);
+    ourWordCount[0] = 0;
 
   //kernel src load
     FILE *f;
@@ -121,7 +119,7 @@ int main(int argc, char const *argv[]) {
     eprint("prog src", ret);
     ret = clBuildProgram(program, 1, &deviceid, NULL, NULL, NULL);
     eprint("build prog", ret);
-    kernel = clCreateKernel(program, "reverseAll", &ret);
+    kernel = clCreateKernel(program, "wordCounter", &ret);
     eprint("create kernel", ret);
 
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *) &inStrObj);
@@ -132,7 +130,7 @@ int main(int argc, char const *argv[]) {
     eprint("kernel arg 2", ret);
     ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void *) &ourWordObj);
     eprint("kernel arg 3", ret);
-    ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *) &ourWordCount);
+    ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *) &ourWordCountObj);
     eprint("kernel arg 4", ret);
 
     size_t global_item_size = wInd + 1;
@@ -143,11 +141,11 @@ int main(int argc, char const *argv[]) {
     ret = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
     tot_time = (double)(time_end - time_start);
     
-    ret =clEnqueueReadBuffer(command_queue, ourWordCountObj, CL_TRUE, 0, sizeof(int), ourWordCount, 0, NULL, NULL);
-    eprint(ret);
+    ret =clEnqueueReadBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, sizeof(int), ourWordCount, 0, NULL, NULL);
+    eprint("read", ret);
 
     //display result
-    printf("Number of occurances are      >> %d\n", ourWordCount);
+    printf("Number of occurances are          >> %d\n", ourWordCount[0]);
 
     //cleanup
     ret = clFlush(cmdq);
@@ -156,14 +154,15 @@ int main(int argc, char const *argv[]) {
     ret = clReleaseMemObject(inStrObj);
     ret = clReleaseMemObject(w_start_obj);
     ret = clReleaseMemObject(w_end_obj);
-    ret = clReleaseMenObject(ourWordObj);
-    ret = clReleaseMenObject(ourWordCountObj);
+    ret = clReleaseMemObject(ourWordObj);
+    ret = clReleaseMemObject(ourWordCountObj);
     ret = clReleaseCommandQueue(cmdq);
     ret = clReleaseContext(context);
     free(inStr);
     free(wordEnd);
     free(wordStart);
     free(ourWord);
+    free(ourWordCount);
 
     end = clock();
     printf("\n=============================TIME INFO=============================\n");
