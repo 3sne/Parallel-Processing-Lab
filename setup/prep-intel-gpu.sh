@@ -7,6 +7,11 @@ echo; echo; echo
 echo Start...
 mkdir temp_xdr
 cd temp_xdr
+sudo apt update
+sudo apt install ocl-icd-opencl-dev
+sudo apt install clinfo
+sudo apt install opencl-headers
+sudo apt install ocl-icd-libopencl1
 sudo apt install wget
 wget https://github.com/intel/compute-runtime/releases/download/19.06.12357/intel-gmmlib_18.4.1_amd64.deb
 wget https://github.com/intel/compute-runtime/releases/download/19.06.12357/intel-igc-core_18.50.1270_amd64.deb
@@ -16,8 +21,6 @@ wget https://github.com/intel/compute-runtime/releases/download/19.06.12357/inte
 sudo dpkg -i *.deb
 cd ..
 sudo rm -R temp_xdr
-sudo apt update
-sudo apt install clinfo
 clinfo
 echo; echo; echo
 echo -e ' \t '"***************************************"
