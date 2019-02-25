@@ -9,10 +9,7 @@ __kernel void wordCounter(__global char *s,
     int end = endInd[id];
     int flag = 1, k = 0;
 
-    printf("id > %d, start > %d, end > %d, \n", id, start, end);
-
-    for ( int i = start; i < end; i += 1 ) {
-        printf("id > %d, s[i] > %d, word[k] > %d\n", id, s[i], word[k]);
+    for ( int i = start; i <= end; i += 1 ) {
         if ( s[i] != word[k] ) {
             flag = 0;
             break;
@@ -21,7 +18,8 @@ __kernel void wordCounter(__global char *s,
     }
 
     if ( flag ) {
-        printf("Up by id > %d\n", id);
-        *wordCount++;
+        wordCount[id] = 1;
+    } else {
+        wordCount[id] = 0;
     }
 }

@@ -43,7 +43,6 @@ int main(int argc, char const *argv[]) {
 
   //user input
     int wInd = 0;
-    int *ourWordCount = (int*)malloc(sizeof(int));
     int *wordStart = (int*)malloc(sizeof(int) * 256);
     int *wordEnd = (int*)malloc(sizeof(int) * 256);
     char *inStr = (char*)malloc(sizeof(char) * 1024);
@@ -54,7 +53,7 @@ int main(int argc, char const *argv[]) {
     getWords(inStr, wordStart, wordEnd, &wInd);
     printf("Enter word to find occurances for >> ");
     scanf("%s", ourWord);
-    ourWordCount[0] = 0;
+    int *ourWordCount = (int*)malloc(sizeof(int) * (wInd + 1));
 
   //kernel src load
     FILE *f;
@@ -101,7 +100,7 @@ int main(int argc, char const *argv[]) {
     eprint("w_end_obj", ret);
     cl_mem ourWordObj = clCreateBuffer(context, CL_MEM_READ_WRITE, 1024 * sizeof(char), NULL, &ret);
     eprint("ourWordObj", ret);
-    cl_mem ourWordCountObj = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(int), NULL, &ret);
+    cl_mem ourWordCountObj = clCreateBuffer(context, CL_MEM_READ_WRITE, (wInd + 1) * sizeof(int), NULL, &ret);
     eprint("ourWordObj", ret);
     
     ret = clEnqueueWriteBuffer(cmdq, inStrObj, CL_TRUE, 0, 1024 * sizeof(char), inStr, 0, NULL, NULL);
@@ -112,7 +111,7 @@ int main(int argc, char const *argv[]) {
     eprint("w_end_obj Write", ret);
     ret = clEnqueueWriteBuffer(cmdq, ourWordObj, CL_TRUE, 0, 1024 * sizeof(char), ourWord, 0, NULL, NULL);
     eprint("ourWordObj Write", ret);
-    ret = clEnqueueWriteBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, sizeof(int), ourWordCount, 0, NULL, NULL);
+    ret = clEnqueueWriteBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, (wInd + 1) * sizeof(int), ourWordCount, 0, NULL, NULL);
     eprint("ourWordCountObj Write", ret);
 
     program = clCreateProgramWithSource(context, 1, (const char**) &srcStr, (const size_t*)&SS, &ret);
@@ -141,11 +140,15 @@ int main(int argc, char const *argv[]) {
     ret = clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
     tot_time = (double)(time_end - time_start);
     
-    ret =clEnqueueReadBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, sizeof(int), ourWordCount, 0, NULL, NULL);
+    ret =clEnqueueReadBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, (wInd + 1) * sizeof(int), ourWordCount, 0, NULL, NULL);
     eprint("read", ret);
 
     //display result
-    printf("Number of occurances are          >> %d\n", ourWordCount[0]);
+    int total = 0;
+    for ( int i = 0; i <= wInd; i++ ){ 
+        total += ourWordCount[i];
+    }
+    printf("\nNumber of occurances are          >> %d\n", total);
 
     //cleanup
     ret = clFlush(cmdq);
