@@ -108,7 +108,7 @@ int main(int argc, char const *argv[]) {
     size_t global_item_size = LS - 1;
     size_t local_item_size = 1;
     
-    for ( int i = 1; i <= LS / 2; i++ ) {
+    for ( int i = 0; i <= LS / 2; i++ ) {
         ret = clEnqueueNDRangeKernel(cmdq, kernel1, 1, NULL, &global_item_size, &local_item_size, 0, NULL, &event);
         eprint(ret);
         ret = clEnqueueNDRangeKernel(cmdq, kernel2, 1, NULL, &global_item_size, &local_item_size, 0, NULL, &event);
