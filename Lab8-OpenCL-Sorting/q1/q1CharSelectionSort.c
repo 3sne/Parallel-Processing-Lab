@@ -14,8 +14,8 @@ int main() {
 	int i;
 	int LS, len;
 	char *buf = (char *)malloc(sizeof(int) * 102400);
-	printf("Enter a String ( No Spaces )>> ");
-	scanf("%s", buf);
+	printf("Enter a String >> ");
+	scanf("%[^\n]s", buf);
 	LS = strlen(buf);
 	char *A = (char *)malloc(sizeof(char) * LS);
 	strcpy(A, buf);
