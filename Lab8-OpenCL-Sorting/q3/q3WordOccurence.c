@@ -11,9 +11,9 @@
 #include <time.h>
 #define MSS (0x100000)
 
-void eprint(char *s, cl_int ec) {
+void eprint(char *s, int lineNumber, cl_int ec) {
     if (ec != CL_SUCCESS) {
-        printf("ERROR: %d | %s\n", ec, s);
+        printf("LINE: %d,  ERROR: %d | %s\n", lineNumber, ec, s);
     }
 }
 
@@ -86,51 +86,51 @@ int main(int argc, char const *argv[]) {
 
     //GO
     ret = clGetPlatformIDs(1, &platid, &numPlats);
-    eprint("plat",ret);
+    eprint("plat", __LINE__ , ret);
     ret = clGetDeviceIDs(platid, CL_DEVICE_TYPE_ALL, 1, &deviceid, &numDevices);
-    eprint("dev", ret);
+    eprint("dev", __LINE__ , ret);
     context = clCreateContext(NULL, 1, &deviceid, NULL, NULL, &ret);
     cmdq = clCreateCommandQueue(context, deviceid, CL_QUEUE_PROFILING_ENABLE, &ret);
     
     cl_mem inStrObj = clCreateBuffer(context, CL_MEM_READ_WRITE, 1024 * sizeof(char), NULL, &ret);
-    eprint("inStrObj", ret);
+    eprint("inStrObj", __LINE__ , ret);
     cl_mem w_start_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, 256 * sizeof(int), NULL, &ret);
-    eprint("w_start_obj", ret);
+    eprint("w_start_obj", __LINE__ , ret);
     cl_mem w_end_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, 256 * sizeof(int), NULL, &ret);
-    eprint("w_end_obj", ret);
+    eprint("w_end_obj", __LINE__ , ret);
     cl_mem ourWordObj = clCreateBuffer(context, CL_MEM_READ_WRITE, 1024 * sizeof(char), NULL, &ret);
-    eprint("ourWordObj", ret);
+    eprint("ourWordObj", __LINE__ , ret);
     cl_mem ourWordCountObj = clCreateBuffer(context, CL_MEM_READ_WRITE, (wInd + 1) * sizeof(int), NULL, &ret);
-    eprint("ourWordObj", ret);
+    eprint("ourWordObj", __LINE__ , ret);
     
     ret = clEnqueueWriteBuffer(cmdq, inStrObj, CL_TRUE, 0, 1024 * sizeof(char), inStr, 0, NULL, NULL);
-    eprint("inStrObj Write", ret);
+    eprint("inStrObj Write", __LINE__ , ret);
     ret = clEnqueueWriteBuffer(cmdq, w_start_obj, CL_TRUE, 0, 256 * sizeof(int), wordStart, 0, NULL, NULL);
-    eprint("w_start_obj Write", ret);
+    eprint("w_start_obj Write", __LINE__ , ret);
     ret = clEnqueueWriteBuffer(cmdq, w_end_obj, CL_TRUE, 0, 256 * sizeof(int), wordEnd, 0, NULL, NULL);
-    eprint("w_end_obj Write", ret);
+    eprint("w_end_obj Write", __LINE__ , ret);
     ret = clEnqueueWriteBuffer(cmdq, ourWordObj, CL_TRUE, 0, 1024 * sizeof(char), ourWord, 0, NULL, NULL);
-    eprint("ourWordObj Write", ret);
+    eprint("ourWordObj Write", __LINE__ , ret);
     ret = clEnqueueWriteBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, (wInd + 1) * sizeof(int), ourWordCount, 0, NULL, NULL);
-    eprint("ourWordCountObj Write", ret);
+    eprint("ourWordCountObj Write", __LINE__ , ret);
 
     program = clCreateProgramWithSource(context, 1, (const char**) &srcStr, (const size_t*)&SS, &ret);
-    eprint("prog src", ret);
+    eprint("prog src", __LINE__ , ret);
     ret = clBuildProgram(program, 1, &deviceid, NULL, NULL, NULL);
-    eprint("build prog", ret);
+    eprint("build prog", __LINE__ , ret);
     kernel = clCreateKernel(program, "wordCounter", &ret);
-    eprint("create kernel", ret);
+    eprint("create kernel", __LINE__ , ret);
 
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *) &inStrObj);
-    eprint("kernel arg 0", ret);
+    eprint("kernel arg 0", __LINE__ , ret);
     ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void *) &w_start_obj);
-    eprint("kernel arg 1", ret);
+    eprint("kernel arg 1", __LINE__ , ret);
     ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void *) &w_end_obj);
-    eprint("kernel arg 2", ret);
+    eprint("kernel arg 2", __LINE__ , ret);
     ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void *) &ourWordObj);
-    eprint("kernel arg 3", ret);
+    eprint("kernel arg 3", __LINE__ , ret);
     ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void *) &ourWordCountObj);
-    eprint("kernel arg 4", ret);
+    eprint("kernel arg 4", __LINE__ , ret);
 
     size_t global_item_size = wInd + 1;
     size_t local_item_size = 1;
@@ -141,14 +141,14 @@ int main(int argc, char const *argv[]) {
     tot_time = (double)(time_end - time_start);
     
     ret =clEnqueueReadBuffer(cmdq, ourWordCountObj, CL_TRUE, 0, (wInd + 1) * sizeof(int), ourWordCount, 0, NULL, NULL);
-    eprint("read", ret);
+    eprint("read", __LINE__ , ret);
 
     //display result
     int total = 0;
     for ( int i = 0; i <= wInd; i++ ){ 
         total += ourWordCount[i];
     }
-    printf("\nNumber of occurances are          >> %d\n", total);
+    printf("Number of occurances are          >> %d\n", total);
 
     //cleanup
     ret = clFlush(cmdq);
