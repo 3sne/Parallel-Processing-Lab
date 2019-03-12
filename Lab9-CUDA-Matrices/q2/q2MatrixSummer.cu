@@ -1,3 +1,9 @@
+/* 
+    @Author:    3sne ( Mukur Panchani )
+    @FileName:  q2MatrixSummer.cu
+    @Task:      CUDA program compute sums of two matrices, using different parallelism techniques.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda_runtime.h>
@@ -77,7 +83,7 @@ int main() {
             addMatColThreads<<<1,n>>>(da, db, dc, m, n);
             break;
 
-        case 3://Part B: 1 Thread handles 1 column >>
+        case 3://Part C: 1 Thread handles 1 element >>
             printf("Chose: Thread handles element\n");
             addMatElementThread<<<1, block_conf>>>(da, db, dc, m, n);
             break;
